@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Directives - Chap 10</title>
+    <script src="../jquery.min.js"></script>
+    <script src="../angular.min.js"></script>
+    <script src="../bootstrap.min.js"></script>
+    <link href="../bootstrap.min.css" rel="stylesheet"/>
+    <script>
+        angular.module("exampleApp", [])
+                .controller("defaultCtrl", function ($scope) {
+
+                    $scope.data = {};
+
+                    $scope.todos = [
+                        {action: "Get groceries", complete: false},
+                        {action: "Call plumber", complete: false},
+                        {action: "Buy running shoes", complete: true},
+                        {action: "Buy flowers", complete: false},
+                        {action: "Call family", complete: false}
+                    ];
+                });
+    </script>
+    <style>
+        td > *:first-child {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+    <h3 class="panel-header">List</h3>
+
+    <div class="checkbox well">
+        <label>
+            <input type="checkbox" ng-model="todos[2].complete" />
+            Item 3 is complete
+        </label>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Action</th>
+            <th>Done</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="item in todos">
+            <td>{{$index + 1}}</td>
+            <td>{{item.action}}</td>
+            <td>
+                <!--<span ng-hide="item.complete">(Incomplete)</span>
+                <span ng-show="item.complete">(Done)</span> --><!--CSS style does not apply since the item above (first child) in the DOM is only hidden not removed-->
+
+                <span ng-if="!item.complete">(Incomplete)</span>
+                <span ng-if="item.complete">(Done)</span>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
