@@ -9,9 +9,20 @@
     <link href="../bootstrap.min.css" rel="stylesheet"/>
     <script>
         angular.module("exampleApp", [])
-                .controller("defaultCtrl", function ($scope) {
+                .controller("defaultCtrl", function ($scope, $location) {
 
-                    $scope.data = {};
+                    $scope.message = "Tap Me!";
+                    $scope.dataValue = false;
+
+                    $scope.data = {
+                        rowColor: "Blue",
+                        columnColor: "Green"
+                    };
+
+                    $scope.handleEvent = function (e) {
+                        //console.log("Event type: " + e.type);
+                        $scope.data.columnColor = e.type == "mouseover" ? "Red" : "Blue";
+                    };
 
                     $scope.todos = [
                         {action: "Get groceries", complete: false},
@@ -27,7 +38,13 @@
                         Rows: "Red",
                         Columns: "Green"
                     };
+                }).directive("tap", function () {
+            return function (scope, elem, attrs) {
+                elem.on("touchstart touchend", function () {
+                   scope.$apply(attrs["tap"]);
                 });
+            }
+        });
     </script>
     <style>
         td > *:first-child {
@@ -50,7 +67,7 @@
         </label>
     </div>-->
 
-    <div class="row-well">
+    <!--<div class="row-well">
         <div class="col-xs-6" ng-repeat="(key, val) in settings">
             <h4>{{key}}</h4>
             <div class="radio" ng-repeat="button in buttonNames">
@@ -59,6 +76,23 @@
                 </label>
             </div>
         </div>
+    </div>-->
+
+    <div class="checkbox well">
+        <label>
+            <input type="checkbox" ng-model="dataValue">
+            Set the Data Value
+        </label>
+    </div>
+    <button class="btn btn-success" ng-disabled="dataValue">My Button</button>
+
+    <div class="well" tap="message = 'Tapped!'">
+        {{message}}
+        <span ng-repeat="button in buttonNames">
+            <button class="btn btn-info" ng-click="data.rowColor = button">
+                {{button}}
+            </button>
+        </span>
     </div>
 
     <table class="table">
@@ -69,18 +103,26 @@
             <th>Done</th>
         </tr>
         </thead>
-        <tr ng-repeat="item in todos" ng-class="settings.Rows">
+
+        <tr ng-repeat="item in todos" ng-class="data.rowColor" ng-mouseenter="handleEvent($event)" ng-mouseleave="handleEvent($event)">
             <td>{{$index + 1}}</td>
             <td>{{item.action}}</td>
-            <td ng-style="{'background-color': settings.Columns}">{{item.complete}}</td>
-            <!--<td>
+            <td ng-class="data.columnColor">{{item.complete}}</td>
+        </tr>
+
+        <!--<tr ng-repeat="item in todos" ng-class-even="settings.Rows" ng-class-odd="settings.Columns">
+            <td>{{$index + 1}}</td>
+            <td>{{item.action}}</td>
+            <td>{{item.complete}}</td>
+            &lt;!&ndash;<td ng-style="{'background-color': settings.Columns}">{{item.complete}}</td>&ndash;&gt;
+            &lt;!&ndash;<td>
                 &lt;!&ndash;<span ng-hide="item.complete">(Incomplete)</span>
                 <span ng-show="item.complete">(Done)</span> &ndash;&gt;&lt;!&ndash;CSS style does not apply since the item above (first child) in the DOM is only hidden not removed&ndash;&gt;
 
                 <span ng-if="!item.complete">(Incomplete)</span>
                 <span ng-if="item.complete">(Done)</span>
-            </td>-->
-        </tr>
+            </td>&ndash;&gt;
+        </tr>-->
     </table>
 </div>
 </body>
