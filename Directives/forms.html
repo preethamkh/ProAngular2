@@ -11,17 +11,19 @@
         angular.module("exampleApp", [])
                 .controller("defaultCtrl", function ($scope) {
                     $scope.todos = [
-                        { action: "Get groceries", complete: false },
-                        { action: "Call plumber", complete: false },
-                        { action: "Buy running shoes", complete: true },
-                        { action: "Buy flowers", complete: false },
-                        { action: "Call family", complete: false }];
+                        {action: "Get groceries", complete: false},
+                        {action: "Call plumber", complete: false},
+                        {action: "Buy running shoes", complete: true},
+                        {action: "Buy flowers", complete: false},
+                        {action: "Call family", complete: false}];
 
                     $scope.addNewItem = function (newItem) {
-                        $scope.todos.push({
-                            action: newItem.action + " (" + newItem.location + ")",
-                            complete: false
-                        });
+                        if (angular.isDefined(newItem) && angular.isDefined(newItem.action) && angular.isDefined(newItem.location)) {
+                            $scope.todos.push({
+                                action: newItem.action + " (" + newItem.location + ")",
+                                complete: false
+                            });
+                        }
                     };
                 });
     </script>
@@ -38,29 +40,33 @@
 
     <div class="row">
         <div class="col-xs-6">
-        <div class="well">
-            <div class="form-group row">
-                <label for="actionText">Action:</label>
-                <input id="actionText" class="form-control" ng-model="newTodo.action">
+            <div class="well">
+                <div class="form-group row">
+                    <label for="actionText">Action:</label>
+                    <input id="actionText" class="form-control" ng-model="newTodo.action">
+                </div>
+                <div class="form-group row">
+                    <label for="actionLocation">Location:</label>
+                    <select id="actionLocation" class="form-control" ng-model="newTodo.location">
+                        <option>Home</option>
+                        <option>Office</option>
+                        <option>Mall</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-block" ng-click="addNewItem(newTodo)">
+                    Add
+                </button>
             </div>
-            <div class="form-group row">
-                <label for="actionLocation">Location:</label>
-                <select id="actionLocation" class="form-control" ng-model="newTodo.location">
-                    <option>Home</option>
-                    <option>Office</option>
-                    <option>Mall</option>
-                </select>
-            </div>
-            <button class="btn btn-primary btn-block" ng-click="addNewItem(newTodo)">
-                Add
-            </button>
-        </div>
         </div>
     </div>
 
     <table class="table">
         <thead>
-        <tr><th>#</th><th>Action</th><th>Done</th></tr>
+        <tr>
+            <th>#</th>
+            <th>Action</th>
+            <th>Done</th>
+        </tr>
         </thead>
         <tr ng-repeat="item in todos">
             <td>{{$index + 1}}</td>
