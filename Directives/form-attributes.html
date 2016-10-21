@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Directives - Chap 10</title>
+    <script src="../jquery.min.js"></script>
+    <script src="../angular.min.js"></script>
+    <script src="../bootstrap.min.js"></script>
+    <link href="../bootstrap.min.css" rel="stylesheet"/>
+    <script>
+        angular.module("exampleApp", [])
+                .controller("defaultCtrl", function ($scope) {
+                    $scope.requireValue = true;
+                    $scope.matchPattern = new RegExp("^[a-z]");
+
+                    $scope.todos = [
+                        { id: 100, action: "Get groceries", complete: false },
+                        { id: 200, action: "Call plumber", complete: false },
+                        { id: 300, action: "Buy running shoes", complete: true }];
+
+                    $scope.todos2 = [
+                        { id: 100, place: "Store", action: "Get groceries", complete: false },
+                        { id: 200, place: "Home", action: "Call plumber", complete: false },
+                        { id: 300, place: "Store", action: "Buy running shoes", complete: true }];
+                });
+    </script>
+</head>
+<body>
+    <div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+        <form name="myForm" novalidate>
+            <div class="well">
+                <div class="form-group">
+                    <label>Text:</label>
+                    <!-- Shouldn't set the pattern for type = "email, url, number" -->
+                    <input name="sample" class="form-control" ng-model="inputValue" ng-required="requireValue" ng-minlength="3" ng-maxlength="10" ng-pattern="matchPattern">
+                    <label>
+                        <!-- need to wrap in extra pair of quotes, otherwise the true and false values are treated as non-constant -->
+                        <input name="sample2" type="checkbox" ng-model="inputValue2" ng-true-value="'Hurrah!'" ng-false-value="'Boo!'">
+                        This is a checkbox
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Select an Action:</label>
+                    <!--<select ng-model="selectValue" ng-options="item.id as item.action for item in todos">-->
+                    <select ng-model="selectValue" ng-options="item.id as item.action group by item.place for item in todos2">
+                        <option value="">(Pick One)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="well">
+                <p>Required Error: {{myForm.sample.$error.required}}</p>
+                <p>Min Length Error: {{myForm.sample.$error.minlength}}</p>
+                <p>Max Length Error: {{myForm.sample.$error.maxlength}}</p>
+                <p>Pattern Error: {{myForm.sample.$error.pattern}}</p>
+                <p>Element Valid: {{myForm.sample.$valid}}</p>
+                <p>Model Value: {{inputValue2}}</p>
+                <p>Selected: {{selectValue || 'None'}}</p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
